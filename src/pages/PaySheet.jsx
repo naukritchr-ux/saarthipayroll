@@ -141,7 +141,8 @@ const PaySheet = () => {
     const selectStyle = { padding: "12px 16px", borderRadius: "12px", border: "1px solid #d1d5db", background: "#ffffff", color: txColor('primary'), fontSize: "13px", fontWeight: "600", outline: "none", cursor: "pointer" };
     const thStyle = { padding: "16px 14px", textAlign: "left", fontSize: "12px", fontWeight: "700", color: txColor('secondary'), borderBottom: "1px solid #e2e8f0", whiteSpace: "nowrap", background: "#f8fafc", letterSpacing: ".3px", textTransform: "uppercase", position: "sticky", top: 0, zIndex: 5 };
     const tdStyle = { padding: "14px", fontSize: "13px", color: txColor('primary'), borderBottom: "1px solid #f1f5f9", whiteSpace: "nowrap" };
-
+    const startYear = Number(String(selectedYear).split("-")[0]);
+    const medicalLabel = startYear >= 2026 ? "Mobile Internet" : "Medical";
     const columns = [
         { key: "name", label: "Employee", w: "180px" },
         { key: "fgs", label: "Fixed Gross" },
@@ -149,7 +150,7 @@ const PaySheet = () => {
         { key: "eb", label: "Earn Basic" },
         { key: "eh", label: "HRA" },
         { key: "ec", label: "Convey." },
-        { key: "em", label: "Medical" },
+        { key: "em", label: medicalLabel },
         { key: "eo", label: "Other" },
         { key: "eg", label: "Earn Gross", highlight: true },
         { key: "pf", label: "PF" },
