@@ -14,7 +14,7 @@ import {
 
 function Payroll() {
 
-  const [payroll, setPayroll] = useState([])
+  const [payroll, setPayrollState] = useState([])
   const [editingEmployee, setEditingEmployee] =
   useState(null)
 const [showPayrollDrawer, setShowPayrollDrawer] = useState(false); 
@@ -52,7 +52,42 @@ const [incrementHistory,setIncrementHistory] = useState([]);
 const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
 const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
+// ===== FORCE FULL ATTENDANCE TILL SEPTEMBER 2026 =====
+const isFullPresentPeriod = (month, year) =>
+  year < 2026 || (year === 2026 && month <= 9);
 
+const forcePresentTillSep2026 = (data) => {
+  if (!Array.isArray(data)) return [];
+  if (!isFullPresentPeriod(selectedMonth, selectedYear)) return data;
+
+  return data.map((emp) => {
+    const totalDays = new Date(selectedYear, selectedMonth, 0).getDate();
+
+    const earnings =
+      Number(emp.basic_da || 0) +
+      Number(emp.hra || 0) +
+      Number(emp.conveyance_allowance || 0) +
+      Number(emp.medical_allowance || 0) +
+      Number(emp.other_allowance || 0) +
+      Number(emp.bonus || 0);
+
+    const deductions =
+      Number(emp.pf || 0) + Number(emp.deduction || 0);
+
+    return {
+  ...emp,
+  total_days: totalDays,
+  present_days: totalDays,
+  absent_days: 0,
+  paid_leave_days: 0,
+  payable_salary: Math.max(0, earnings - deductions),
+};
+  });
+};
+
+// every existing setPayroll(...) call now goes through the override
+const setPayroll = (data) => setPayrollState(forcePresentTillSep2026(data));
+// ======================================================
 
   useEffect(() => {
     apiFetch(`${API_BASE}/api/payroll/monthly?month=${selectedMonth}&year=${selectedYear}`)
