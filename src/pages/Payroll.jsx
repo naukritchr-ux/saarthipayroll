@@ -74,7 +74,7 @@ const forcePresentTillSep2026 = (data) => {
     const deductions =
       Number(emp.pf || 0) + Number(emp.deduction || 0);
 
-    return {
+return {
   ...emp,
   total_days: totalDays,
   present_days: totalDays,
@@ -2204,3 +2204,5 @@ color: "#0f172a",
 
 };
 export default Payroll
+
+
